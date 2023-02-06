@@ -1,13 +1,9 @@
 package com.zhang.learn.netty.groupchat;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * @author zhangjiwei
@@ -22,13 +18,13 @@ public class HeartServerHandler extends SimpleChannelInboundHandler<String> {
             IdleStateEvent event = (IdleStateEvent) evt;
             String eventType = "";
             switch (event.state()) {
-                case IdleState.READER_IDLE:
+                case READER_IDLE:
                     eventType = "读空闲";
                     break;
-                case IdleState.WRITER_IDLE:
+                case WRITER_IDLE:
                     eventType = "写空闲";
                     break;
-                case IdleState.ALL_IDLE:
+                case ALL_IDLE:
                     eventType = "读写空闲";
                     break;
                 default:
