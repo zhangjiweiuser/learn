@@ -1,6 +1,7 @@
 package com.zhang.groovy;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +52,7 @@ public class CouponTest {
 
             json = json.replace("\"{","{").replace("\"\"","\"").replace("}\"","}");
 //            System.out.println(json);
-            JSONObject requst = JSONObject.parseObject(json);
+            JSONObject requst = JSON.parseObject(json);
             System.out.println(spl[3] +"\t" + spl[5]+"\t"+ requst.getString("dealers"));
 //            System.out.println("-------------------");
 //            String[] dealers = requst.getString("dealers").split(",");
