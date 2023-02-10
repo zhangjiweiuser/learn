@@ -1,4 +1,4 @@
-package com.example.nettyserver;
+package com.zhang.nettyserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

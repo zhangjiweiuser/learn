@@ -1,13 +1,11 @@
 package com.zhang.nettyserver.server;
 
+import com.zhang.nettyserver.handler.FirstServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 
 public class NettyServer {
 
@@ -20,15 +18,9 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
-                        channel.pipeline().addLast(new StringDecoder());
-                        channel.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-                            @Override
-                            protected void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) throws Exception {
-                                System.out.println(msg);
-                            }
-                        });
+//                        channel.pipeline().addLast(new StringDecoder());
+                        channel.pipeline().addLast(new FirstServerHandler());
                     }
                 }).bind(8080);
-
     }
 }
