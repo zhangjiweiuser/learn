@@ -2,12 +2,14 @@ package com.zhang.nettyserver.server;
 
 import com.zhang.nettyserver.decoder.PacketDecoder;
 import com.zhang.nettyserver.decoder.Spliter;
+import com.zhang.nettyserver.dto.LoginRequestPacket;
 import com.zhang.nettyserver.dto.MessageRequestPacket;
 import com.zhang.nettyserver.dto.PacketCodeC;
 import com.zhang.nettyserver.encoder.PacketEncoder;
 import com.zhang.nettyserver.handler.LoginResponseHandler;
 import com.zhang.nettyserver.handler.MessageResponseHandler;
 import com.zhang.nettyserver.util.LoginUtil;
+import com.zhang.nettyserver.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -75,18 +77,36 @@ public class NettiClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        Scanner scanner = new Scanner(System.in);
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                if (LoginUtil.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端:");
-                    Scanner scanner = new Scanner(System.in);
-                    String line = scanner.nextLine();
+                System.out.println("验证用的channel:" + channel.id().toString() + ":" + channel.toString());
+                if (!SessionUtil.hasLogin(channel)) {
+                    System.out.println("输入用户名:");
+                    String userName = scanner.nextLine();
+                    loginRequestPacket.setUsername(userName);
+                    loginRequestPacket.setPassword("pwd");
+                    channel.writeAndFlush(loginRequestPacket);
+                    waitForLoginResponse();
+
+                } else {
+                    String toUserId = scanner.next();
+                    String message = scanner.next();
                     MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                    messageRequestPacket.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc().ioBuffer(), messageRequestPacket);
-                    channel.writeAndFlush(byteBuf);
+                    messageRequestPacket.setToUserId(toUserId);
+                    messageRequestPacket.setMessage(message);
+                    channel.writeAndFlush(messageRequestPacket);
                 }
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+
+        }
     }
 }

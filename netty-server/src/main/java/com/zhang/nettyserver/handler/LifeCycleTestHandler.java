@@ -29,7 +29,7 @@ public class LifeCycleTestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("channel 有数据可读：channelRead");
+        System.out.println("channel 有数据可读：channelRead："+msg);
         super.channelRead(ctx, msg);
     }
 

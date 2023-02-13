@@ -2,6 +2,9 @@ package com.zhang.nettyserver.handler;
 
 import com.zhang.nettyserver.dto.MessageRequestPacket;
 import com.zhang.nettyserver.dto.MessageResponsePacket;
+import com.zhang.nettyserver.dto.Session;
+import com.zhang.nettyserver.util.SessionUtil;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -15,8 +18,25 @@ import java.util.Date;
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket messageRequestPacket) throws Exception {
+        // 1. 活得消息发送方的会话信息
+        Session session = SessionUtil.getSession(ctx.channel());
         // 处理消息
-        MessageResponsePacket responsePacket = receiveMessage(messageRequestPacket);
+        MessageResponsePacket responsePacket = new MessageResponsePacket();
+        responsePacket.setFromUserId(session.getUserId());
+        responsePacket.setFromUserName(session.getUsername());
+        responsePacket.setMessage(messageRequestPacket.getMessage());
+
+        // 3. 获得消息接收方的channel
+        Channel toUserChannel = SessionUtil.getChannel(messageRequestPacket.getToUserId());
+        // 4. 将消息发送给消息接收方
+        if(toUserChannel != null && SessionUtil.hasLogin(toUserChannel)){
+            toUserChannel.writeAndFlush(responsePacket);
+        }
+        else{
+            System.out.println("【"+messageRequestPacket.getToUserId()+"] 不在线，发送失败！");
+        }
+
+//        MessageResponsePacket responsePacket = receiveMessage(messageRequestPacket);
         ctx.channel().writeAndFlush(responsePacket);
     }
 
