@@ -1,7 +1,6 @@
 package com.zhang.nettyserver.dto;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
 /**
  * @author zhangjiwei1
@@ -9,11 +8,13 @@ import io.netty.buffer.ByteBufAllocator;
  * @create 2023-02-10 17:04
  */
 public class PacketCodeC {
-    private static final int MAGIC_NUMBER = 0x12345678;
 
-    public ByteBuf encode(Packet packet){
-        // 1. 创建ByteBuf 对象
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+    public static PacketCodeC INSTANCE = new PacketCodeC();
+    public static final int MAGIC_NUMBER = 0x12345678;
+
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
+//        // 1. 创建ByteBuf 对象
+//        ByteBuf byteBuf = allocator.ioBuffer();
         // 2. 序列化Java对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
         // 3. 实际编码过程
@@ -22,10 +23,25 @@ public class PacketCodeC {
         byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
         byteBuf.writeByte(packet.getCommand());
         byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
         return byteBuf;
     }
 
-    public Packet decode(ByteBuf byteBuf){
+//    public ByteBuf encode(ByteBufAllocator allocator, Packet packet) {
+//        // 1. 创建ByteBuf 对象
+//        ByteBuf byteBuf = allocator.ioBuffer();
+//        // 2. 序列化Java对象
+//        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+//        // 3. 实际编码过程
+//        byteBuf.writeInt(MAGIC_NUMBER);
+//        byteBuf.writeByte(packet.getVersion());
+//        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+//        byteBuf.writeByte(packet.getCommand());
+//        byteBuf.writeInt(bytes.length);
+//        byteBuf.writeBytes(bytes);
+//        return byteBuf;
+//    }
+    public Packet decode(ByteBuf byteBuf) {
         // 1. 跳过魔数
         byteBuf.skipBytes(4);
         // 2. 跳过版本号
@@ -38,7 +54,28 @@ public class PacketCodeC {
         int length = byteBuf.readInt();
         byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes);
-//        getR
+        Class<? extends Packet> requestType = getRequestType(command);
+        Serializer serializer = getSerializer(serializeAlgorithm);
+        if (requestType != null && serializer != null) {
+            return serializer.deserialize(requestType, bytes);
+        }
         return null;
+    }
+
+    private Class<? extends Packet> getRequestType(byte command) {
+        if (Command.LOGIN_REQUEST == command) {
+            return LoginRequestPacket.class;
+        } else if (Command.LOGIN_RESPONSE == command) {
+            return LoginResponsePacket.class;
+        } else if (Command.MESSAGE_REQUEST == command) {
+            return MessageRequestPacket.class;
+        } else if (Command.MESSAGE_RESPONSE == command) {
+            return MessageResponsePacket.class;
+        }
+        return null;
+    }
+
+    private Serializer getSerializer(byte serializeAlgorithm) {
+        return new JSONSerializer();
     }
 }

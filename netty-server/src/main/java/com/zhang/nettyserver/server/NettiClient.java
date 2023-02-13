@@ -1,14 +1,24 @@
-package com.example.nettyclient.client;
+package com.zhang.nettyserver.server;
 
-import com.example.nettyclient.handler.FirstClientHandler;
+import com.zhang.nettyserver.decoder.PacketDecoder;
+import com.zhang.nettyserver.decoder.Spliter;
+import com.zhang.nettyserver.dto.MessageRequestPacket;
+import com.zhang.nettyserver.dto.PacketCodeC;
+import com.zhang.nettyserver.encoder.PacketEncoder;
+import com.zhang.nettyserver.handler.LoginResponseHandler;
+import com.zhang.nettyserver.handler.MessageResponseHandler;
+import com.zhang.nettyserver.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringEncoder;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class NettiClient {
@@ -23,8 +33,15 @@ public class NettiClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel channel) throws Exception {
-                        channel.pipeline().addLast(new StringEncoder())
-                                .addLast(new FirstClientHandler());
+                        channel.pipeline()
+                                .addLast(new Spliter())
+                                .addLast(new PacketDecoder())
+                                .addLast(new LoginResponseHandler())
+                                .addLast(new MessageResponseHandler())
+                                .addLast(new PacketEncoder());
+//                                .addLast(new StringEncoder())
+//                                .addLast(new FirstClientHandler());
+//                                .addLast(new LoginClientHandler());
                     }
                 });
         connect(bootstrap, "127.0.0.1", 8080, MAX_RETRY);
@@ -39,6 +56,9 @@ public class NettiClient {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println("连接成功");
+                Channel channel = ((ChannelFuture) future).channel();
+                // 连接成功后，启动控制台线程
+                startConsoleThread(channel);
             } else if (retry == 0) {
                 System.out.println("重试次数已用完，放弃连接！");
             } else {
@@ -52,5 +72,21 @@ public class NettiClient {
                 bootstrap.config().group().schedule(() -> connect(bootstrap, host, port, num), delay, TimeUnit.SECONDS);
             }
         });
+    }
+
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (LoginUtil.hasLogin(channel)) {
+                    System.out.println("输入消息发送至服务端:");
+                    Scanner scanner = new Scanner(System.in);
+                    String line = scanner.nextLine();
+                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+                    messageRequestPacket.setMessage(line);
+                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc().ioBuffer(), messageRequestPacket);
+                    channel.writeAndFlush(byteBuf);
+                }
+            }
+        }).start();
     }
 }

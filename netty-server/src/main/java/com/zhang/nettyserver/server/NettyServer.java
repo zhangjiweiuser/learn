@@ -1,6 +1,11 @@
 package com.zhang.nettyserver.server;
 
-import com.zhang.nettyserver.handler.FirstServerHandler;
+import com.zhang.nettyserver.decoder.PacketDecoder;
+import com.zhang.nettyserver.decoder.Spliter;
+import com.zhang.nettyserver.encoder.PacketEncoder;
+import com.zhang.nettyserver.handler.LifeCycleTestHandler;
+import com.zhang.nettyserver.handler.LoginRequestHandler;
+import com.zhang.nettyserver.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,7 +24,15 @@ public class NettyServer {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
 //                        channel.pipeline().addLast(new StringDecoder());
-                        channel.pipeline().addLast(new FirstServerHandler());
+//                        channel.pipeline().addLast(new FirstServerHandler());
+                        channel.pipeline()
+                                .addLast(new LifeCycleTestHandler())
+                                .addLast(new Spliter())
+                                .addLast(new PacketDecoder())
+                                .addLast(new LoginRequestHandler())
+                                .addLast(new MessageRequestHandler())
+                                .addLast(new PacketEncoder())
+                        ;
                     }
                 }).bind(8080);
     }
