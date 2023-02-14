@@ -5,6 +5,7 @@ import com.zhang.nettyserver.dto.MessageResponsePacket;
 import com.zhang.nettyserver.dto.Session;
 import com.zhang.nettyserver.util.SessionUtil;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -15,9 +16,12 @@ import java.util.Date;
  * @description
  * @create 2023-02-13 14:38
  */
+@ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
+    public static final MessageRequestHandler INSTANCE = new MessageRequestHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket messageRequestPacket) throws Exception {
+        System.out.println("开始处理：MessageRequestHandler");
         // 1. 活得消息发送方的会话信息
         Session session = SessionUtil.getSession(ctx.channel());
         // 处理消息

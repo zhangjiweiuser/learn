@@ -2,16 +2,12 @@ package com.zhang.nettyserver.server;
 
 import com.zhang.nettyserver.decoder.PacketDecoder;
 import com.zhang.nettyserver.decoder.Spliter;
-import com.zhang.nettyserver.dto.LoginRequestPacket;
-import com.zhang.nettyserver.dto.MessageRequestPacket;
-import com.zhang.nettyserver.dto.PacketCodeC;
 import com.zhang.nettyserver.encoder.PacketEncoder;
-import com.zhang.nettyserver.handler.LoginResponseHandler;
-import com.zhang.nettyserver.handler.MessageResponseHandler;
-import com.zhang.nettyserver.util.LoginUtil;
+import com.zhang.nettyserver.handler.*;
+import com.zhang.nettyserver.service.impl.ConsoleCommandManager;
+import com.zhang.nettyserver.service.impl.LoginConsoleCommand;
 import com.zhang.nettyserver.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -30,22 +26,26 @@ public class NettiClient {
     public static void main(String[] args) throws InterruptedException {
         Bootstrap bootstrap = new Bootstrap();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
-        bootstrap.group(workerGroup)
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel channel) throws Exception {
-                        channel.pipeline()
-                                .addLast(new Spliter())
-                                .addLast(new PacketDecoder())
-                                .addLast(new LoginResponseHandler())
-                                .addLast(new MessageResponseHandler())
-                                .addLast(new PacketEncoder());
+        bootstrap.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel channel) throws Exception {
+                channel.pipeline()
+                        .addLast(new IMIdleStateHandler())
+                        .addLast(new HeartBeatTimerHandler())
+                        .addLast(new Spliter())
+                        .addLast(new PacketDecoder())
+                        .addLast(new LoginResponseHandler())
+                        .addLast(new MessageResponseHandler())
+                        .addLast(new CreateGroupResponseHandler())
+                        .addLast(new JoinGroupResponseHandler())
+                        .addLast(new QuitGroupResponseHandler())
+                        .addLast(new ListGroupMembersResponseHandler())
+                        .addLast(new PacketEncoder());
 //                                .addLast(new StringEncoder())
 //                                .addLast(new FirstClientHandler());
 //                                .addLast(new LoginClientHandler());
-                    }
-                });
+            }
+        });
         connect(bootstrap, "127.0.0.1", 8080, MAX_RETRY);
         /*.channel();
         while (true) {
@@ -78,35 +78,21 @@ public class NettiClient {
 
     private static void startConsoleThread(Channel channel) {
         Scanner scanner = new Scanner(System.in);
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 System.out.println("验证用的channel:" + channel.id().toString() + ":" + channel.toString());
                 if (!SessionUtil.hasLogin(channel)) {
-                    System.out.println("输入用户名:");
-                    String userName = scanner.nextLine();
-                    loginRequestPacket.setUsername(userName);
-                    loginRequestPacket.setPassword("pwd");
-                    channel.writeAndFlush(loginRequestPacket);
-                    waitForLoginResponse();
+                    loginConsoleCommand.exec(scanner, channel);
 
                 } else {
-                    String toUserId = scanner.next();
-                    String message = scanner.next();
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                    messageRequestPacket.setToUserId(toUserId);
-                    messageRequestPacket.setMessage(message);
-                    channel.writeAndFlush(messageRequestPacket);
+                    System.out.println("验证成功，我走到这里了");
+                    consoleCommandManager.exec(scanner, channel);
                 }
             }
         }).start();
     }
 
-    private static void waitForLoginResponse() {
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException e) {
 
-        }
-    }
 }

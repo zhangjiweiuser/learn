@@ -27,7 +27,7 @@ public class PacketCodeC {
         return byteBuf;
     }
 
-//    public ByteBuf encode(ByteBufAllocator allocator, Packet packet) {
+    //    public ByteBuf encode(ByteBufAllocator allocator, Packet packet) {
 //        // 1. 创建ByteBuf 对象
 //        ByteBuf byteBuf = allocator.ioBuffer();
 //        // 2. 序列化Java对象
@@ -71,6 +71,26 @@ public class PacketCodeC {
             return MessageRequestPacket.class;
         } else if (Command.MESSAGE_RESPONSE == command) {
             return MessageResponsePacket.class;
+        } else if (Command.CREATE_GROUP_REQUEST == command) {
+            return CreateGroupRequestPacket.class;
+        } else if (Command.CREATE_GROUP_RESPONSE == command) {
+            return CreateGroupResponsePacket.class;
+        } else if (Command.JOIN_GROUP_REQUEST == command) {
+            return JoinGroupRequestPacket.class;
+        } else if (Command.JOIN_GROUP_RESPONSE == command) {
+            return JoinGroupResponsePacket.class;
+        } else if (Command.QUIT_GROUP_REQUEST == command) {
+            return QuitGroupRequestPacket.class;
+        } else if (Command.QUIT_GROUP_RESPONSE == command) {
+            return QuitGroupResponsePacket.class;
+        } else if (Command.LIST_GROUP_MEMBER_REQUEST == command) {
+            return ListGroupMemberRequestPacket.class;
+        } else if (Command.LIST_GROUP_MEMBER_RESPONSE == command) {
+            return ListGroupMemberResponsePacket.class;
+        }else if (Command.HEARTBEAT_REQUEST == command) {
+            return HeartBeatRequestPacket.class;
+        }else if (Command.HEARTBEAT_RESPONSE == command) {
+            return HeartBeatResponsePacket.class;
         }
         return null;
     }

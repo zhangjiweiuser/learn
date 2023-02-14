@@ -15,6 +15,7 @@ import java.util.Date;
 public class LoginServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("开始处理：LoginServerHandler channelRead");
         ByteBuf requestByteBuf = (ByteBuf) msg;
         // 解码
         Packet packet = PacketCodeC.INSTANCE.decode(requestByteBuf);

@@ -18,6 +18,7 @@ public class LoginClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("开始处理：LoginClientHandler channelActive");
         System.out.println(new Date() + ": 客户端开始登录");
         // 创建登录对象
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
@@ -32,6 +33,7 @@ public class LoginClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("开始处理：LoginClientHandler channelRead");
         System.out.println("客户端收到回复，开始解析");
         ByteBuf byteBuf = (ByteBuf) msg;
         Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);

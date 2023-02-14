@@ -1,15 +1,12 @@
 package com.zhang.nettyserver.handler;
 
-import com.zhang.nettyserver.dto.LoginRequestPacket;
 import com.zhang.nettyserver.dto.LoginResponsePacket;
 import com.zhang.nettyserver.dto.Session;
-import com.zhang.nettyserver.util.LoginUtil;
 import com.zhang.nettyserver.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * @author zhangjiwei1
@@ -19,9 +16,10 @@ import java.util.UUID;
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket loginResponsePacket) throws Exception {
+        System.out.println("开始处理：LoginResponseHandler channelRead0");
         if (loginResponsePacket.getSuccess()) {
 //            LoginUtil.markAsLogin(ctx.channel());
-            Session session = new Session(loginResponsePacket.getUserId(), "");
+            Session session = new Session(loginResponsePacket.getUserId(), loginResponsePacket.getUsername());
             SessionUtil.bindSession(session, ctx.channel());
             System.out.println(new Date() + ": 客户端登录成功");
         } else {

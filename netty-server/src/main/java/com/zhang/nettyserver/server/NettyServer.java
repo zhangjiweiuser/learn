@@ -1,12 +1,6 @@
 package com.zhang.nettyserver.server;
 
-import com.zhang.nettyserver.decoder.PacketDecoder;
-import com.zhang.nettyserver.decoder.Spliter;
-import com.zhang.nettyserver.encoder.PacketEncoder;
-import com.zhang.nettyserver.handler.AuthHandler;
-import com.zhang.nettyserver.handler.LifeCycleTestHandler;
-import com.zhang.nettyserver.handler.LoginRequestHandler;
-import com.zhang.nettyserver.handler.MessageRequestHandler;
+import com.zhang.nettyserver.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -28,13 +22,15 @@ public class NettyServer {
 //                        channel.pipeline().addLast(new FirstServerHandler());
                         channel.pipeline()
 //                                .addLast(new LifeCycleTestHandler())
+                                .addLast(new IMIdleStateHandler())
 //                                .addLast(new Spliter())
-                                .addLast(new PacketDecoder())
-                                .addLast(new LoginRequestHandler())
+                                .addLast(PacketCodecHandler.INSTANCE)
+                                .addLast(HeartBeatRequestHandler.INSTANCE)
+                                .addLast(LoginRequestHandler.INSTANCE)
                                 // 添加用户认证handler
-//                                .addLast(new AuthHandler())
-                                .addLast(new MessageRequestHandler())
-                                .addLast(new PacketEncoder())
+                                .addLast(AuthHandler.INSTANCE)
+                                .addLast(IMHandler.INSTANCE)
+//                                .addLast(new PacketEncoder())
                         ;
                     }
                 }).bind(8080);

@@ -1,32 +1,36 @@
 package com.zhang.nettyserver.handler;
 
-import com.alibaba.fastjson2.util.UUIDUtils;
 import com.zhang.nettyserver.dto.LoginRequestPacket;
 import com.zhang.nettyserver.dto.LoginResponsePacket;
 import com.zhang.nettyserver.dto.Session;
+import com.zhang.nettyserver.util.IDUtil;
 import com.zhang.nettyserver.util.LoginUtil;
 import com.zhang.nettyserver.util.SessionUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import java.util.UUID;
 
 /**
  * @author zhangjiwei1
  * @description
  * @create 2023-02-13 14:36
  */
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
+        System.out.println("开始处理：LoginRequestHandler channelRead0");
         System.out.println("开始处理登录逻辑:" + loginRequestPacket.getUsername());
         // 登录逻辑
 //        LoginResponsePacket responsePacket = login(ctx, loginRequestPacket);
         LoginResponsePacket responsePacket = new LoginResponsePacket();
         responsePacket.setVersion(loginRequestPacket.getVersion());
         responsePacket.setSuccess(true);
-        String userId = randomUserId();
+        String userId = IDUtil.randomUserId();
         responsePacket.setUserId(userId);
+        responsePacket.setUsername(loginRequestPacket.getUsername());
         System.out.println("登录用的channel"+ctx.channel().id().toString()+":"+ctx.channel().toString());
         SessionUtil.bindSession(new Session(userId, loginRequestPacket.getUsername()), ctx.channel());
         ctx.channel().writeAndFlush(responsePacket);
@@ -56,7 +60,5 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         return true;
     }
 
-    private String randomUserId() {
-        return UUID.randomUUID().toString().substring(0, 5);
-    }
+
 }
