@@ -18,13 +18,13 @@ public class HeartBeatTimerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         scheduleSendHeartBeat(ctx);
-        super.channelActive(ctx);
+//        super.channelActive(ctx);
     }
     private void scheduleSendHeartBeat(ChannelHandlerContext ctx){
         ctx.executor().schedule(()->{
             if(ctx.channel().isActive()){
                 System.out.println("我开始往服务端发送心跳了");
-                ctx.writeAndFlush(new HeartBeatRequestPacket());
+                ctx.channel().writeAndFlush(new HeartBeatRequestPacket());
                 scheduleSendHeartBeat(ctx);
             }
         },HEARTBEAT_INTERVAL, TimeUnit.SECONDS);
