@@ -17,5 +17,10 @@ public interface TestService {
 
     String asyncTaskReturnString();
 
-    void testAop(UserDto userDto,Long id);
+    void testAop(UserDto userDto, Long id);
+
+    /**
+     * 测试熔断
+     */
+    String testSentinel();
 }

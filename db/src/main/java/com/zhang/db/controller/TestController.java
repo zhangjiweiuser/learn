@@ -93,8 +93,10 @@ public class TestController {
         userDto.setUserId(105);
         //无返回值
         testService.testAop(userDto,10L);
+    }
 
-
-
+    @GetMapping("/testSentinel")
+    public String testSentinel(){
+        return testService.testSentinel();
     }
 }

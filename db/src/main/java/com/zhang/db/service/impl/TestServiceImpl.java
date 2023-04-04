@@ -1,5 +1,6 @@
 package com.zhang.db.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.zhang.db.annotation.OperateLog;
 import com.zhang.db.dao.UserMapper;
 import com.zhang.db.dto.UserDto;
@@ -11,6 +12,8 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -74,7 +77,22 @@ public class TestServiceImpl implements TestService {
 
     @OperateLog()
     @Override
-    public void testAop(UserDto userDto,Long id) {
+    public void testAop(UserDto userDto, Long id) {
         System.out.println(userDto.toString());
     }
+
+    @SentinelResource(value = "testSentinel", blockHandler = "exceptionHandler", fallback = "testSentinelFallback")
+    @Override
+    public String testSentinel() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public String exceptionHandler() {
+        return "exceptionHandler";
+    }
+
+    public String testSentinelFallback() {
+        return "testSentinelFallback";
+    }
+
 }
