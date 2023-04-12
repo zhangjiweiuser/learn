@@ -1,11 +1,8 @@
 package com.zhang.learn.chapter2023.chapter04.chapter0409;
 
-import com.google.common.collect.Lists;
-
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class CompletableFuture2Test {
     public static void main(String[] args) throws ExecutionException, InterruptedException {

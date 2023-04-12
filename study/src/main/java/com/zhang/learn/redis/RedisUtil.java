@@ -33,6 +33,7 @@ public class RedisUtil {
 
         redisStandaloneConfiguration.setPort(6379);
         redisStandaloneConfiguration.setHostName("127.0.0.1");
+
         RedisConnectionFactory redisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration);
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
