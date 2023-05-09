@@ -1,4 +1,4 @@
-package com.zhang.learn.chapter2023.chapter0319;
+package com.zhang.learn.chapter2023.chapter03.chapter0319;
 
 /**
  * 在一个1-N的数字上，有一个机器人，当在1位置时，只能向右移动，当在N位置时，只能向左移动，

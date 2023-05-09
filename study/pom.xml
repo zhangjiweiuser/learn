@@ -31,6 +31,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.dozermapper/dozer-core -->
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
+            <version>6.5.2</version>
+        </dependency>
     </dependencies>
 
     <build>

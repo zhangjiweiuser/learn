@@ -10,11 +10,9 @@ import java.io.Serializable;
  * @create 2023-02-02 14:21
  */
 @Data
-public class UserDto implements Serializable {
+public class UserVo implements Serializable {
     private Integer id;
     private String name;
-    private String address;
-    private String birth;
     private String sex;
     private String city;
 }

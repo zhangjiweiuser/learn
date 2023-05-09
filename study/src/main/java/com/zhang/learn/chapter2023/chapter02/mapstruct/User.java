@@ -3,7 +3,7 @@ package com.zhang.learn.chapter2023.chapter02.mapstruct;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author zhangjiwei1
@@ -16,5 +16,7 @@ public class User {
     private Integer id;
     private String name;
     private String address;
-    private Date birth;
+    private LocalDateTime birth;
+    private Sex sex;
+    private Address addr;
 }
