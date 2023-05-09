@@ -16,4 +16,6 @@ public interface UserService extends IService<User> {
 
     boolean saveUser(UserDto userDto);
     int insert(UserDto userDto);
+
+    User addUser(User user);
 }

@@ -46,4 +46,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return num;
 
     }
+
+    @Override
+    public User addUser(User user) {
+        return user;
+    }
 }
