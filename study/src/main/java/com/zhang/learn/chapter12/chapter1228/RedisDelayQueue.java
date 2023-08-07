@@ -35,10 +35,10 @@ public class RedisDelayQueue {
 
     @PostConstruct
     public void init() {
-        Set<String> topicList = stringRedisTemplate.opsForSet().members("topicList");
-        if (topicList != null) {
-            topicList.forEach(this::registerTopic);
-        }
+//        Set<String> topicList = stringRedisTemplate.opsForSet().members("topicList");
+//        if (topicList != null) {
+//            topicList.forEach(this::registerTopic);
+//        }
 
     }
 

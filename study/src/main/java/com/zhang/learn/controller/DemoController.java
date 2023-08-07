@@ -1,6 +1,7 @@
 package com.zhang.learn.controller;
 
 import com.zhang.learn.rabbitmq.DemoSender;
+import org.apache.http.client.utils.HttpClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,4 +26,7 @@ public class DemoController {
     public String setDelayMessage(String message, int delay) {
         return demoSender.sendDelay(message, delay);
     }
+
+
+
 }

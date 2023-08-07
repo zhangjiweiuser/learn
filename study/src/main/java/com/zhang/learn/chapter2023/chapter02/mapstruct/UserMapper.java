@@ -36,5 +36,6 @@ public interface UserMapper {
         }
         return sex.getDesc();
     }
+
     List<UserDto> userToUserDto(List<User> users);
 }
