@@ -22,7 +22,7 @@ public class MapStructTest {
         Address address = new Address();
         address.setCity("北京");
         address.setProvince("北京");
-        User user = new User.UserBuilder().id(1).name("张三").address("北京市").birth(LocalDateTime.now()).sexww(Sex.FEMALE).addr(address).build();
+        User user = new User.UserBuilder().id(1).name("张三").address("北京市").birth(LocalDateTime.now()).sex(Sex.FEMALE).addr(address).build();
         UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
         System.out.println(userDto);
     }
@@ -32,7 +32,7 @@ public class MapStructTest {
         Address address = new Address();
         address.setCity("北京");
         address.setProvince("北京");
-        User user = new User.UserBuilder().id(1).name("张三").address("北京市").birth(LocalDateTime.now()).sexww(Sex.FEMALE).addr(address).build();
+        User user = new User.UserBuilder().id(1).name("张三").address("北京市").birth(LocalDateTime.now()).sex(Sex.FEMALE).addr(address).build();
         UserVo userVo = UserMapper.INSTANCE.userToUserVo(user);
         System.out.println(userVo);
     }
