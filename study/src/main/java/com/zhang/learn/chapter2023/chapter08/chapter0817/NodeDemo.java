@@ -12,6 +12,7 @@ public class NodeDemo {
         util.add(2);
         util.add(3);
         util.add(4);
+        util.add(5);
         util.show();
 //        util.deleteAtIndex(3);
 //        System.out.println("--删除3后");
@@ -21,8 +22,11 @@ public class NodeDemo {
 //        System.out.println("在3后面增加5");
 //        util.show();
         // 测试反转
-        Node reverse = util.reverse();
-        System.out.println("测试反转");
+//        Node reverse = util.reverse();
+//        System.out.println("测试反转");
+        // 测试两两反转
+        Node reverse = util.twoReverse();
+        System.out.println("测试两两反转");
         reverse.show();
     }
 }
@@ -115,7 +119,7 @@ class NodeUtil {
         if (index < 0 || null == root) {
             return;
         }
-        if(index == 0){
+        if (index == 0) {
             root = root.next;
             return;
         }
@@ -125,24 +129,114 @@ class NodeUtil {
             tmp = tmp.next;
             t++;
         }
-        if(tmp != null && tmp.next != null){
+        if (tmp != null && tmp.next != null) {
             tmp.next = tmp.next.next;
         }
     }
 
-    public Node reverse(){
-        if(root == null){
+    public Node reverse() {
+        if (root == null) {
             return null;
         }
         Node pre = null;
         Node cur = root;
-        while(cur != null){
+        while (cur != null) {
             Node tmp = cur.next;
             cur.next = pre;
             pre = cur;
             cur = tmp;
         }
         return pre;
+    }
+
+    public Node twoReverse() {
+        if (root == null) {
+            return null;
+        }
+
+        Node dummy = new Node(-1);
+        dummy.next = root;
+        Node ans = dummy;
+        Node pre = ans.next;
+        Node cur = pre.next;
+        while (cur != null) {
+            Node t = cur.next;
+            pre.next = t;
+            cur.next = pre;
+            ans.next = cur;
+            ans = pre;
+            pre = t;
+            if (pre != null) {
+                cur = pre.next;
+            } else {
+                cur = null;
+            }
+        }
+
+        return dummy.next;
+    }
+
+    /**
+     * @param nodea 链表a
+     * @param nodeb 链表b
+     * @return 有a, b 两个链表，判断期是否有相交，如果有，则返回，没有则返回null
+     */
+    public Node xiangjiao(Node nodea, Node nodeb) {
+        // 1. 先求出两个链表的长度
+        int lena = 0, lenb = 0;
+        Node ta = nodea;
+        Node tb = nodeb;
+        while (ta != null) {
+            lena++;
+            ta = ta.next;
+        }
+        while (tb != null) {
+            lenb++;
+            tb = tb.next;
+        }
+        // 如果a较长，则gap>0,如果b较长，则gap<0
+        int gap = lena - lenb;
+        // 重新为其赋值
+        ta = nodea;
+        tb = nodeb;
+        if(gap > 0){
+            while(gap > 0){
+                ta = ta.next;
+                gap--;
+            }
+        }else if(gap < 0){
+            while(gap < 0){
+                tb = tb.next;
+                gap++;
+            }
+        }
+        while(ta != null){
+            if(ta == tb){
+                return ta;
+            }else{
+                ta = ta.next;
+                tb = tb.next;
+            }
+        }
+        return null;
+    }
+    // 判断是否有环，如果有环，请求出环入口
+    public Node detectCycle(Node head){
+        Node slow = head;
+        Node fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                fast = head;
+                while(slow != fast){
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return fast;
+            }
+        }
+        return null;
     }
 }
 
