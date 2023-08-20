@@ -7,11 +7,14 @@ package com.zhang.learn.chapter2023.chapter08.chapter0818;
  */
 public class ReverseStr {
     public static void main(String[] args) {
-        char[] ch = {'a', 'b', 'c', 'd', 'e', 'f', 'g','h'};
-        reverse3(ch, 3);
-        for (int i = 0; i < ch.length; i++) {
-            System.out.printf(ch[i] + "\t");
-        }
+//        char[] ch = {'a', 'b', 'c', 'd', 'e', 'f', 'g','h'};
+//        reverse3(ch, 3);
+//        for (int i = 0; i < ch.length; i++) {
+//            System.out.printf(ch[i] + "\t");
+//        }
+        String str = "abcdefg";
+        String result = reverse4(str,2);
+        System.out.println(result);
     }
 
     private static void reverse(char[] ch) {
@@ -87,5 +90,44 @@ public class ReverseStr {
                 end--;
             }
         }
+    }
+
+    /**
+     * 字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。
+     * 请定义一个函数实现字符串左旋转操作的功能。
+     * 比如，输入字符串"abcdefg"和数字2，该函数将返回左旋转两位得到的结果"cdefgab"。
+     * @param str
+     * @return
+     */
+    private static String reverse4(String str,int k){
+        char[] chars = str.toCharArray();
+        int i = 0;
+        int m = k;
+        while(i < m){
+            char t = chars[i];
+            chars[i] = chars[m-1];
+            chars[m-1] = t;
+            i++;
+            m--;
+        }
+        i = str.length() -1;
+        m = k;
+        while(m <= i){
+            char t = chars[i];
+            chars[i] = chars[m];
+            chars[m] = t;
+            m++;
+            i--;
+        }
+        i = 0;
+        m = str.length()-1;
+        while(i <= m){
+            char t = chars[i];
+            chars[i] = chars[m];
+            chars[m] = t;
+            m--;
+            i++;
+        }
+        return new String(chars);
     }
 }
