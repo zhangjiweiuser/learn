@@ -24,12 +24,14 @@ public class BinaryNodeDemo {
         node4.left = node1;
         node4.right = node2;
         TreeNodeUtil util = new TreeNodeUtil(node5);
-        List<Integer> preLists = util.preOrder(node5);
-        System.out.println("前序遍历:" + preLists);//5,4,1,2,6
-        List<Integer> infixLists = util.infixOrder(node5);
-        System.out.println("中序遍历:" + infixLists);// 1,4,2,5,6
-        List<Integer> postLists = util.postOrder(node5);
-        System.out.println("后序遍历:" + postLists); // 1,2,4,6,5
+//        List<Integer> preLists = util.preOrder(node5);
+//        System.out.println("前序遍历:" + preLists);//5,4,1,2,6
+//        List<Integer> infixLists = util.infixOrder(node5);
+//        System.out.println("中序遍历:" + infixLists);// 1,4,2,5,6
+//        List<Integer> postLists = util.postOrder(node5);
+//        System.out.println("后序遍历:" + postLists); // 1,2,4,6,5
+        List<List<Integer>> lists = util.levelOrder(node5);
+        System.out.println(lists);
     }
 }
 
@@ -92,6 +94,26 @@ class TreeNodeUtil {
         postOrder(root.left, result);
         postOrder(root.right, result);
         result.add(root.val);
+    }
+    public List<List<Integer>> levelOrderList = new ArrayList<>();
+    public List<List<Integer>> levelOrder(TreeNode root){
+        checkFun01(root,0);
+        return levelOrderList;
+    }
+    // DFS - 递归方式，层序遍历
+    public void checkFun01(TreeNode node,Integer deep){
+        if(node == null){
+            return;
+        }
+        deep++;
+        if(levelOrderList.size() < deep){
+            // 当层次增加时，list中的item也增加，利用list的索引值进行层级界定
+            List<Integer> item = new ArrayList<>();
+            levelOrderList.add(item);
+        }
+        levelOrderList.get(deep-1).add(node.val);
+        checkFun01(node.left,deep);
+        checkFun01(node.right,deep);
     }
 }
 
