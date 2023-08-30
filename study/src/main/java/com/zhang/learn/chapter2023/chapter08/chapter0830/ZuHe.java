@@ -22,12 +22,14 @@ public class ZuHe {
     }
 
     public void backtracking(int n, int k, int startIndex) {
+        System.out.println(path + "-->" + n + "-->" + k + "-->" + startIndex);
         if (path.size() == k) {
             result.add(new ArrayList<>(path));
             return;
         }
         for (int i = startIndex; i <= n; i++) {
             path.add(i);
+
             backtracking(n, k, i + 1);
             path.removeLast();
         }
