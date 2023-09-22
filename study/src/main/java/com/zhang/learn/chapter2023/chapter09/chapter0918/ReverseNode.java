@@ -21,26 +21,45 @@ public class ReverseNode {
 //            result = result.next;
 //        }
         // 测试转移
-        Node node1 = new Node(6);
-        Node node2 = new Node(5);
+//        Node node1 = new Node(6);
+//        Node node2 = new Node(5);
+//        Node node3 = new Node(3);
+//        Node node4 = new Node(4);
+//        Node node5 = new Node(1);
+//        Node node6 = new Node(1);
+//        Node node7 = new Node(2);
+//        Node node8 = new Node(8);
+//        node1.next = node2;
+//        node2.next = node3;
+//        node3.next = node4;
+//        node4.next = node5;
+//        node5.next = node6;
+//        node6.next = node7;
+//        node7.next = node8;
+        Node node1 = new Node(1);
+        Node node2 = new Node(2);
         Node node3 = new Node(3);
         Node node4 = new Node(4);
-        Node node5 = new Node(1);
-        Node node6 = new Node(1);
-        Node node7 = new Node(2);
-        Node node8 = new Node(8);
+        Node node5 = new Node(5);
         node1.next = node2;
         node2.next = node3;
         node3.next = node4;
         node4.next = node5;
-        node5.next = node6;
-        node6.next = node7;
-        node7.next = node8;
-        Node zhuanyi = zhuanyi(node1, 4);
+        Node zhuanyi = swapPairs(node1);
         while (zhuanyi != null) {
             System.out.print(zhuanyi.val + "\t");
             zhuanyi = zhuanyi.next;
         }
+    }
+    public static Node swapPairs(Node head){
+        if(head == null || head.next == null){
+            return head;
+        }
+        Node next = head.next;
+        Node newNode = swapPairs(next.next);
+        next.next = head;
+        head.next = newNode;
+        return next;
     }
 
     private static Node add(Node h1, Node h2) {
