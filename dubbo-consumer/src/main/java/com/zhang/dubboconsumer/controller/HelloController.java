@@ -1,7 +1,8 @@
 package com.zhang.dubboconsumer.controller;
 
+import com.zhang.dubbointerface.service.HelloService;
 import com.zhang.dubbointerface.service.UserService;
-import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,11 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class HelloController {
-    @DubboReference
+    @Reference
     private UserService userService;
+    @Reference
+    private HelloService helloService;
+    @GetMapping("/user")
+    public String getUser(String name) {
+        return userService.sayHello(name);
+    }
 
     @GetMapping("/hello")
     public String sayHello(String name) {
-        return userService.sayHello(name);
+        return helloService.sayHello(name);
     }
 }

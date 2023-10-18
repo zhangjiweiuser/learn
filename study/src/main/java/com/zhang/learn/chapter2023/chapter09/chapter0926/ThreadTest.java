@@ -1,6 +1,7 @@
 package com.zhang.learn.chapter2023.chapter09.chapter0926;
 
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -15,13 +16,14 @@ public class ThreadTest {
         for (int i = 0; i < 5000; i++) {
             System.out.println("到这里了，准备获取lock");
             lock.lock();
-            while (executor.getQueue().size() == 10 && executor.getPoolSize() == 10) {
+
+            if (executor.getQueue().size() == 10 && executor.getPoolSize() == 10) {
                 TimeUnit.MILLISECONDS.sleep(10);
             }
             System.out.println("-----到这里1");
             executor.submit(() -> {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(5000);
+                    TimeUnit.MILLISECONDS.sleep(ThreadLocalRandom.current().nextInt(1000,3000));
                     System.out.println("-----到这里2");
 //                    condition.signalAll();
                 } catch (InterruptedException e) {
