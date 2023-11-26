@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: nacos-learn
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 85f32c42-c496-4089-bb11-5efad7b20c7a
+        file-extension: yml
+        encode: UTF-8
+        prefix: jdbc
+        group: test
+        extension-configs:
+          - data-id: redis.yml
+            group: test
+            refresh: true
+          - data-id: db.yml
+            group: test
+            refresh: true
+
