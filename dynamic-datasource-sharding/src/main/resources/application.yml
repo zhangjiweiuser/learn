@@ -1,0 +1,112 @@
+server:
+  port: 8844
+
+spring:
+  application:
+    name: @artifactId@
+  datasource:
+    dynamic:
+      primary: master_1 # 设置默认的数据源或者数据源组,默认值即为master
+      strict: true # 严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      datasource:
+        master_1:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/db1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: zz08250901
+        db_3:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/db3?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: zz08250901
+  shardingsphere:
+    datasource:
+      names: ds1,ds2
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+#        dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        jdbcUrl: jdbc:mysql://127.0.0.1:3306/db1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        username: root
+        password: zz08250901
+        connectionTimeoutMilliseconds: 30000
+        idleTimeoutMilliseconds: 60000
+        maxLifetimeMilliseconds: 1800000
+        maxPoolSize: 50
+        minPoolSize: 1
+      ds2:
+        type: com.zaxxer.hikari.HikariDataSource
+#        dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        jdbcUrl: jdbc:mysql://127.0.0.1:3306/db2?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        username: root
+        password: zz08250901
+        connectionTimeoutMilliseconds: 30000
+        idleTimeoutMilliseconds: 60000
+        maxLifetimeMilliseconds: 1800000
+        maxPoolSize: 50
+        minPoolSize: 1
+    #    rules:
+    sharding:
+      tables:
+        t_auto_shop_mod:
+          actual-data-nodes: ds1.t_auto_shop_mod_$->{0..3}
+          key-generator:
+            column: shop_id
+            type: SNOWFLAKE
+          table-strategy:
+            inline:
+              sharding-column: shop_id
+              algorithm-expression: t_auto_shop_mod_$->{shop_id % 4}
+        t_auto_role_mod:
+          actual-data-nodes: ds2.t_auto_role_mod_$->{0..3}
+          key-generator:
+            column: role_id
+            type: SNOWFLAKE
+          table-strategy:
+            inline:
+              sharding-column: role_id
+              algorithm-expression: t_auto_role_mod_$->{role_id % 4}
+        t_auto_order_mod:
+          actual-data-nodes: ds$->{1..2}.t_auto_order_mod_$->{0..5}
+          database-strategy:
+            # 用于单分片键的标准分片场景
+            inline:
+              sharding-column: order_id
+              algorithm-expression: ds$->{order_id % 2 +1}
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_auto_order_mod_$->{order_id % 6}
+          key-generator:
+            column: order_id
+            type: SNOWFLAKE
+      # 分片算法配置
+      sharding-algorithms:
+        # 取模
+        auto_order_mod:
+          type: MOD
+          props:
+            sharding-count: 6
+        # 取模
+        auto_shop_mod:
+          type: MOD
+          props:
+            sharding-count: 4
+        # 取模
+        auto_role_mod:
+          type: MOD
+          props:
+            sharding-count: 4
+    props:
+      sql.show: true # 是否打印sql
+
+#        master_2:
+#          driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+#          url: jdbc:shardingsphere:classpath:shading-auto-tables-algorithm.yml
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-prefix: mybatis.sql.
