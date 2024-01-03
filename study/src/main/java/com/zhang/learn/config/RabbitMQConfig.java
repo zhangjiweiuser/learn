@@ -7,14 +7,13 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author zhangjiwei
  * @Description TODO
  * @Date 2020/7/17 10:19
  */
-@Configuration
+//@Configuration
 public class RabbitMQConfig {
 
 
