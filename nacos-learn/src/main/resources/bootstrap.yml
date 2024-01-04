@@ -17,4 +17,7 @@ spring:
           - data-id: db.yml
             group: test
             refresh: true
+oss-upload:
+    key: mykey
+    value: 1212
 

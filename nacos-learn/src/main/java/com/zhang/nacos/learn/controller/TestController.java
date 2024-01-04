@@ -1,5 +1,7 @@
+/*
 package com.zhang.nacos.learn.controller;
 
+import com.zhang.nacos.learn.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -42,5 +44,9 @@ public class TestController {
         return params;
     }
 
-
+    @GetMapping("/getKey")
+    public String getKey(){
+        return HttpUtil.sign();
+    }
 }
+*/

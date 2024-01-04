@@ -2,6 +2,7 @@ package com.zhang;
 
 import com.zhang.entity.AutoOrderMod;
 import com.zhang.mapper.AutoOrderModMapper;
+import com.zhang.service.AutoOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,9 +13,9 @@ import java.util.Random;
 
 @SpringBootTest
 @Slf4j
-public class ShadingDynamicDatasourceApplicationTests {
+public class AutoOrderTest {
     @Resource
-    AutoOrderModMapper autoOrderModMapper;
+    AutoOrderService autoOrderService;
 
     @Test
     public void testInsertAutoOrderMod() {
@@ -24,7 +25,7 @@ public class ShadingDynamicDatasourceApplicationTests {
             order.setPrice(new BigDecimal(i));
             order.setUserId(Integer.valueOf(random.nextInt(25)).longValue());
             order.setStatus(String.valueOf(i));
-            autoOrderModMapper.insert(order);
+            autoOrderService.save(order);
         }
     }
 
