@@ -1,0 +1,17 @@
+
+spring:
+  activiti:
+    check-process-definitions: false
+    database-schema-update: true
+    #流程定义文件存放目录
+    process-definition-location-prefix: "classpath:/processes/"
+    history-level: full
+    async-executor-activate: true
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      #数据库名称以数字结尾，则必须用引号把值包起来，否则会报错
+      url: 'jdbc:mysql://localhost:3306/activiti6?autoReconnect=true&nullCatalogMeansCurrent=true'
+      username: 'root'
+      password: 'root'
+server:
+  port: 8081
