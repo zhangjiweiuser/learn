@@ -15,6 +15,7 @@
     <description>learn</description>
     <modules>
         <module>dynamic-datasource-sharding</module>
+        <module>activiti6-2</module>
     </modules>
     <packaging>pom</packaging>
     <properties>

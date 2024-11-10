@@ -14,13 +14,13 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://127.0.0.1:3306/db1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
           username: root
-          password: root
+          password: zz08250901
         db_3:
           type: com.zaxxer.hikari.HikariDataSource
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://127.0.0.1:3306/db3?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
           username: root
-          password: root
+          password: zz08250901
   shardingsphere:
     datasource:
       names: ds1,ds2
@@ -30,7 +30,7 @@ spring:
         driverClassName: com.mysql.cj.jdbc.Driver
         jdbcUrl: jdbc:mysql://127.0.0.1:3306/db1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: root
-        password: root
+        password: zz08250901
         connectionTimeoutMilliseconds: 30000
         idleTimeoutMilliseconds: 60000
         maxLifetimeMilliseconds: 1800000
@@ -42,7 +42,7 @@ spring:
         driverClassName: com.mysql.cj.jdbc.Driver
         jdbcUrl: jdbc:mysql://127.0.0.1:3306/db2?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: root
-        password: root
+        password: zz08250901
         connectionTimeoutMilliseconds: 30000
         idleTimeoutMilliseconds: 60000
         maxLifetimeMilliseconds: 1800000
@@ -83,23 +83,6 @@ spring:
           key-generator:
             column: order_id
             type: SNOWFLAKE
-      # 分片算法配置
-      sharding-algorithms:
-        # 取模
-        auto_order_mod:
-          type: MOD
-          props:
-            sharding-count: 6
-        # 取模
-        auto_shop_mod:
-          type: MOD
-          props:
-            sharding-count: 4
-        # 取模
-        auto_role_mod:
-          type: MOD
-          props:
-            sharding-count: 4
     props:
       sql.show: true # 是否打印sql
 

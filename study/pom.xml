@@ -63,6 +63,18 @@
             <artifactId>poi</artifactId>
             <version>4.0.1</version>
         </dependency>
+        <!-- 轻量级规则引擎 -->
+        <dependency>
+            <groupId>com.googlecode.aviator</groupId>
+            <artifactId>aviator</artifactId>
+            <version>5.2.7</version>
+        </dependency>
+        <!--  Snack3-基于Java开发的一个支持 JSONPath 的 JSON 框架 -->
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>snack3</artifactId>
+            <version>3.2.35</version>
+        </dependency>
     </dependencies>
 
     <build>
